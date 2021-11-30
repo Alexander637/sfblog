@@ -24,13 +24,17 @@
 
 
                 {% if previous >= 0 %}
-                    <a href="{{ path('post', { id: post.id, offset: previous }) }}">Previous</a>
+                    <a href="{{ path('post', { slug: post.slug, offset: previous }) }}">Previous</a>
                 {% endif %}
                 {% if next < comments|length %}
-                    <a href="{{ path('post', { id: post.id, offset: next }) }}">Next</a>
+                    <a href="{{ path('post', { slug: post.slug, offset: next }) }}">Next</a>
                 {% endif %}
 
     {% else %}
         <div>No comments have been posted yet for this post.</div>
     {% endif %}
+
+    <h2>Add your own feedback</h2>
+        {{ form(comment_form) }}
+
 {% endblock %}
