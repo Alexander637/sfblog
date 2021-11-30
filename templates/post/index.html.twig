@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Post book{% endblock %}
+
+{% block body %}
+    <h2>Give your feedback!</h2>
+
+    {% for post in posts %}
+        <h3><a href="{{ path('post', {id: post.id}) }}">{{ post.title }}</a></h3>
+        <h4>{{ post.text }}</h4>
+    {% endfor %}
+{% endblock %}
