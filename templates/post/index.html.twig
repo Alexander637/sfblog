@@ -3,6 +3,8 @@
 {% block title %}Post book{% endblock %}
 
 {% block body %}
+    <h2>Write a post</h2>
+        {{ form(post_form) }}
     <h2>Give your feedback!</h2>
 
     {% for post in posts %}

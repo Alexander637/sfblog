@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Entity\Comment;
 use App\Form\CommentFormType;
+use App\Form\PostFormType;
 use App\Repository\CommentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -29,10 +30,23 @@ class PostController extends AbstractController
     }
 
     #[Route('/', name: 'homepage')]
-    public function index(PostRepository $postRepository): Response
+    public function index(Request $request, PostRepository $postRepository): Response
     {
+        $post = new Post();
+        $form = $this->createForm(PostFormType::class, $post);
+
+        $form->handleRequest($request);
+                if ($form->isSubmitted() && $form->isValid()) {
+
+                    $this->entityManager->persist($post);
+                    $this->entityManager->flush();
+
+                    return $this->redirectToRoute('homepage');
+        }
+
         return new Response($this->twig->render('post/index.html.twig', [
                         'posts' => $postRepository->findAll(),
+                        'post_form' => $form->createView()
                     ]));
     }
 
