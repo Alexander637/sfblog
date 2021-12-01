@@ -3,6 +3,13 @@
 {% block title %}Post book{% endblock %}
 
 {% block body %}
+
+    {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% endif %}
+
     <h2>Write a post</h2>
         {{ form(post_form) }}
     <h2>Give your feedback!</h2>
