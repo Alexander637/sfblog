@@ -58,6 +58,12 @@ class Post
      */
     private $slug;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Admin::class, inversedBy="posts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $admin;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -154,4 +160,16 @@ class Post
 
         return $this;
     }
+
+public function getAdmin(): ?Admin
+{
+    return $this->admin;
+}
+
+public function setAdmin(?Admin $admin): self
+{
+    $this->admin = $admin;
+
+    return $this;
+}
 }

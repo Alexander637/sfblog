@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AdminRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -35,6 +37,17 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="admin", orphanRemoval=true)
+     */
+    private $posts;
+
+
+    public function __construct()
+    {
+        $this->posts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -125,4 +138,34 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+/**
+ * @return Collection|Post[]
+ */
+public function getPosts(): Collection
+{
+    return $this->posts;
+}
+
+public function addPost(Post $post): self
+{
+    if (!$this->posts->contains($post)) {
+        $this->posts[] = $post;
+        $post->setAdmin($this);
+    }
+
+    return $this;
+}
+
+public function removePost(Post $post): self
+{
+    if ($this->posts->removeElement($post)) {
+        // set the owning side to null (unless already changed)
+        if ($post->getAdmin() === $this) {
+            $post->setAdmin(null);
+        }
+    }
+
+    return $this;
+}
 }

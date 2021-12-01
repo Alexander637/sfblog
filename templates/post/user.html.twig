@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ admin.username }}{% endblock %}
+
+{% block body %}
+    <h2>Write a post</h2>
+    {{ form(post_form) }}
+
+    <h2>Your posts</h2>
+{% for post in my_posts %}
+
+    {% if post.admin.id == admin.id  %}
+        <h2>Post:<a href="{{ path('post', {slug: post.slug}) }}"> {{ post.title }}</a></h2>
+        <h4>{{ post.text }}</h4>
+    {% endif %}
+
+    {% endfor %}
+{% endblock %}
+

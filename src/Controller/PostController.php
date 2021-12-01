@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Entity\Admin;
 use App\Entity\Comment;
 use App\Form\CommentFormType;
 use App\Form\PostFormType;
+use App\Repository\AdminRepository;
 use App\Repository\CommentRepository;
+use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,24 +33,39 @@ class PostController extends AbstractController
     }
 
     #[Route('/', name: 'homepage')]
-    public function index(Request $request, PostRepository $postRepository): Response
+    public function index( PostRepository $postRepository, AdminRepository $adminRepository): Response
+    {
+
+        return new Response($this->twig->render('post/index.html.twig', [
+                        'session' => $_SESSION,
+                        'posts' => $postRepository->findAll(),
+                        'admins' =>$adminRepository->findAll()
+                    ]));
+    }
+
+    #[Route('/user/{id}', name: 'user')]
+    public function post(Request $request, Admin $admin, PostRepository $myPost)
     {
         $post = new Post();
         $form = $this->createForm(PostFormType::class, $post);
 
         $form->handleRequest($request);
-                if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
+            $post->setAdmin($admin);
 
-                    $this->entityManager->persist($post);
-                    $this->entityManager->flush();
+            $this->entityManager->persist($post);
+            $this->entityManager->flush();
 
-                    return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('user', ['id' => $admin->getId()]);
         }
+//        dd($myPost->findAll());
+        return new Response($this->twig->render('post/user.html.twig', [
+            'session' => $_SESSION,
+            'admin' => $admin,
+            'my_posts' => $myPost->findAll(),
+            'post_form' => $form->createView()
+        ]));
 
-        return new Response($this->twig->render('post/index.html.twig', [
-                        'posts' => $postRepository->findAll(),
-                        'post_form' => $form->createView()
-                    ]));
     }
 
 
@@ -91,4 +109,5 @@ class PostController extends AbstractController
             'comment_form' => $form->createView()
         ]));
     }
+    
 }
