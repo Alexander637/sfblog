@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+
 use App\Entity\Admin;
 use App\Entity\Comment;
 use App\Form\CommentFormType;
 use App\Form\PostFormType;
 use App\Repository\AdminRepository;
 use App\Repository\CommentRepository;
+//use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -44,7 +46,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/user/{id}', name: 'user')]
-    public function post(Request $request, Admin $admin, PostRepository $myPost)
+    public function post(Request $request, Admin $admin, PostRepository $myPost): Response
     {
         $post = new Post();
         $form = $this->createForm(PostFormType::class, $post);
@@ -58,7 +60,7 @@ class PostController extends AbstractController
 
             return $this->redirectToRoute('user', ['id' => $admin->getId()]);
         }
-//        dd($myPost->findAll());
+
         return new Response($this->twig->render('post/user.html.twig', [
             'session' => $_SESSION,
             'admin' => $admin,
@@ -68,6 +70,42 @@ class PostController extends AbstractController
 
     }
 
+        #[Route('/delete/{slug}', name: 'delete')]
+    public function deletePost($slug)
+    {
+
+
+        $post =  $this->getDoctrine()->getRepository(Post::class)->findOneBy(['slug'=>$slug]);
+        $admin = $this->getUser();
+
+        if ($post) {
+            $this->entityManager->remove($post);
+            $this->entityManager->flush();
+        }
+
+        return $this->redirectToRoute('user', ['id' => $admin->getId()] );
+
+    }
+
+    #[Route('/update/{slug}', name: 'update')]
+    public function update(Post $post, Request $request)
+    {
+        $admin = $this->getUser();
+
+        $up_form = $this->createForm(PostFormType::class, $post);
+        $up_form->handleRequest($request);
+
+        if ($up_form->isSubmitted() && $up_form->isValid()) {
+
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('user', ['id' => $admin->getId()] );
+        }
+
+        return $this->render('post/update.html.twig', [
+            'up_form' => $up_form->createView()
+        ]);
+    }
 
     #[Route('/post/{slug}', name: 'post')]
     public function show(Request $request, Post $post, CommentRepository $commentRepository, PostRepository $postRepository, string $photoDir): Response
@@ -77,16 +115,19 @@ class PostController extends AbstractController
         $form = $this->createForm(CommentFormType::class, $comment);
 
         $form->handleRequest($request);
+
                 if ($form->isSubmitted() && $form->isValid()) {
                     $comment->setPost($post);
 
                     if ($photo = $form['photo']->getData()) {
                         $filename = bin2hex(random_bytes(6)).'.'.$photo->guessExtension();
+
                         try {
                                 $photo->move($photoDir, $filename);
                             } catch (FileException $e) {
 
                             }
+
                          $comment->setPhotoFilename($filename);
                     }
 
@@ -109,5 +150,5 @@ class PostController extends AbstractController
             'comment_form' => $form->createView()
         ]));
     }
-    
+
 }

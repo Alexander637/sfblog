@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ admin.username }}{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block body %}
     <h2>Write a post</h2>
@@ -12,6 +12,11 @@
     {% if post.admin.id == admin.id  %}
         <h2>Post:<a href="{{ path('post', {slug: post.slug}) }}"> {{ post.title }}</a></h2>
         <h4>{{ post.text }}</h4>
+
+        <h3><a href="{{  path('delete', {slug: post.slug}) }}">Delete</a></h3>
+
+        <h3> <a href="{{ path('update', {slug: post.slug}) }}">Update</a></h3>
+
     {% endif %}
 
     {% endfor %}
