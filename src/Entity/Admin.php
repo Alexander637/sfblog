@@ -25,6 +25,7 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
+    #[Assert\NotBlank]
     private $username;
 
     /**
@@ -36,6 +37,7 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
+    #[Assert\NotBlank]
     private $password;
 
     /**

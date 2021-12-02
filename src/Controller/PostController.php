@@ -52,6 +52,7 @@ class PostController extends AbstractController
         $form = $this->createForm(PostFormType::class, $post);
 
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $post->setAdmin($admin);
 
