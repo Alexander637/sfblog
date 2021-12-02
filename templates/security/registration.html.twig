@@ -1,0 +1,13 @@
+{% block title %} Registration {% endblock %}
+
+{% block body %}
+
+        <h1>Create your account</h1>
+
+        {{ form_start(admin_form) }}
+        <input type="hidden" name="_csrf_token"
+               value="{{ csrf_token('authenticate') }}"
+        >
+        {{ form_end(admin_form) }}
+
+{% endblock %}
