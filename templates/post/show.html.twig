@@ -1,40 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Post book - {{ post }}{% endblock %}
+{% block title %}Post book - {{ post.title }}{% endblock %}
 
 {% block body %}
-    <h1>Post: {{ post.title }}</h1>
-    <h3>{{ post.text }}</h3>
-    <h3>Author: {{ post.author }}</h3>
-
-    {% if comments|length > 0 %}
-        <div>There are {{ comments|length }} comments.</div>
-        {% for comment in comments %}
-            {% if comment.photofilename %}
-                <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" />
-            {% endif %}
-
-            <h4>Name: {{ comment.author }}</h4>
-            <small>
-                {{ comment.createdAt|format_datetime('medium', 'short') }}
-            </small>
-
-            <p>{{ comment.text }}</p>
-        {% endfor %}
 
 
+<div class="container">
+    <div class="row">
+        <div class="col">
+
+    <div class="card text-center">
+        <h5 class="card-header">{{ post.author}}'s post </h5>
+        <div class="card-body">
+            <h5 class="card-title">{{ post.title }}</h5>
+            <p class="card-text">{{ post.text }}</p>
+        </div>
+    </div>
+
+            {% if comments|length > 0 %}
+                <div  class="text-center">There are {{ comments|length }} comments.</div>
+                {% for comment in comments %}
+            <div class="card text-center">
+                {% if comment.photofilename %}
+                <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" class="card-img-top" alt="...">
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title">Name: {{ comment.author }}</h5>
+                    <p class="card-text">{{ comment.text }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                            {{ comment.createdAt|format_datetime('medium', 'short') }}
+                    </li>
+                </ul>
+            </div>
+                {% endfor %}
+
+                <div class="text-center">
                 {% if previous >= 0 %}
                     <a href="{{ path('post', { slug: post.slug, offset: previous }) }}">Previous</a>
                 {% endif %}
                 {% if next < comments|length %}
                     <a href="{{ path('post', { slug: post.slug, offset: next }) }}">Next</a>
                 {% endif %}
+                </div>
 
     {% else %}
-        <div>No comments have been posted yet for this post.</div>
+        <div  class="text-center">No comments have been posted yet for this post.</div>
     {% endif %}
 
-    <h2>Add your own feedback</h2>
+        </div>
+    </div>
+</div>
+
+
+                    <h2>Add your own feedback</h2>
         {{ form(comment_form) }}
 
 {% endblock %}

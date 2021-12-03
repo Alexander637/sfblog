@@ -6,19 +6,34 @@
     <h2>Write a post</h2>
     {{ form(post_form) }}
 
-    <h2>Your posts</h2>
-{% for post in my_posts %}
+<div class="container">
+    <div class="row">
+        <div class="col">
 
-    {% if post.admin.id == admin.id  %}
-        <h2>Post:<a href="{{ path('post', {slug: post.slug}) }}"> {{ post.title }}</a></h2>
-        <h4>{{ post.text }}</h4>
+            <div class="text-center">
+            <h2>Your posts</h2>
+            </div>
 
-        <h3><a href="{{  path('delete', {slug: post.slug}) }}">Delete</a></h3>
+            {% for post in my_posts %}
+        {% if post.admin.id == admin.id  %}
+            <div class="card text-center">
+                <h5 class="card-header">Author: {{ post.author}} </h5>
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.text }}</p>
 
-        <h3> <a href="{{ path('update', {slug: post.slug}) }}">Update</a></h3>
+                    <div class="card-body">
+                        <a href="{{ path('update', {slug: post.slug}) }}">Update</a>
+                        <a href="{{  path('delete', {slug: post.slug}) }}">Delete</a>
+                    </div>
 
-    {% endif %}
-
+                </div>
+            </div>
+        {% endif %}
     {% endfor %}
+
+        </div>
+    </div>
+</div>
 {% endblock %}
 
