@@ -3,22 +3,40 @@
 {% block title %}Post book{% endblock %}
 
 {% block body %}
+
     {% for admin in admins %}
 
         {% if admin.username == session._sf2_attributes['_security.last_username'] %}
-    <h3><a href="{{ path('user', {id: admin.id}) }}">My Posts</a></h3>
+            <h3><a href="{{ path('user', {id: admin.id}) }}">My Posts</a></h3>
         {% endif %}
+
     {% endfor %}
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+
+            <div class="text-center">
+            <h2>All Posts</h2>
+            </div>
+
+            {% for post in posts %}
+
+                <div class="card text-center">
+                    <h5 class="card-header">Author: {{ post.author}} </h5>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text">{{ post.text }}</p>
+                        <a href="{{ path('post', {slug: post.slug}) }}" class="btn btn-primary">Go to post</a>
+                    </div>
+                </div>
+
+            {% endfor %}
+
         </div>
-    {% endif %}
+    </div>
+</div>
 
-    <h2>Give your feedback!</h2>
-
-    {% for post in posts %}
-        <h3><a href="{{ path('post', {slug: post.slug}) }}">{{ post.title }}</a></h3>
-        <h4>{{ post.text }}</h4>
-    {% endfor %}
 {% endblock %}
