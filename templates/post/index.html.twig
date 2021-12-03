@@ -6,7 +6,7 @@
     {% for admin in admins %}
 
         {% if admin.username == session._sf2_attributes['_security.last_username'] %}
-    <h3><a href="{{ path('user', {id: admin.id}) }}">My</a></h3>
+    <h3><a href="{{ path('user', {id: admin.id}) }}">My Posts</a></h3>
         {% endif %}
     {% endfor %}
     {% if app.user %}
