@@ -10,8 +10,6 @@ use App\Form\CommentFormType;
 use App\Form\PostFormType;
 use App\Repository\AdminRepository;
 use App\Repository\CommentRepository;
-//use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
