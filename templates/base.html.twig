@@ -9,7 +9,7 @@
   </head>
     <body>
             <header>
-
+<div class="container">
                 {% if app.user %}
                     <div class="text-end">
                     <div class="mb-3">
@@ -30,6 +30,7 @@
                     </ul>
                 </div>
                 <hr />
+</div>
             </header>
             {% block body %}{% endblock %}
     </body>
