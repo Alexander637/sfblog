@@ -3,16 +3,17 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
+
+
+<div class="container">
+
     <h2>Write a post</h2>
     {{ form(post_form) }}
 
-<div class="container">
     <div class="row">
         <div class="col">
 
-            <div class="text-center">
-            <h2>Your posts</h2>
-            </div>
+            <h2 class="text-center">Your posts</h2>
 
             {% for post in my_posts %}
         {% if post.admin.id == admin.id  %}
