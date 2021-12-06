@@ -10,13 +10,13 @@
 <div class="container">
 
 
-    {% for admin in admins %}
+{#    {% for admin in admins %}#}
+{#        {% if admin.username == session._sf2_attributes['_security.last_username'] %}#}
+{#    {% if admin.id == user.id%}#}
+    <h3><a href="{{ path('user', {id: user.id}) }}">My Posts</a></h3>
+{#        {% endif %}#}
 
-        {% if admin.username == session._sf2_attributes['_security.last_username'] %}
-            <h3><a href="{{ path('user', {id: admin.id}) }}">My Posts</a></h3>
-        {% endif %}
-
-    {% endfor %}
+{#    {% endfor %}#}
 
     <div class="row">
 

@@ -16,7 +16,6 @@
             <h2 class="text-center">Your posts</h2>
 
             {% for post in my_posts %}
-        {% if post.admin.id == admin.id  %}
             <div class="card text-center">
                 <h5 class="card-header">Author: {{ post.author}} </h5>
                 <div class="card-body">
@@ -30,7 +29,6 @@
 
                 </div>
             </div>
-        {% endif %}
     {% endfor %}
 
         </div>

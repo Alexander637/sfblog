@@ -7,7 +7,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 
-
 /**
  * @method Post|null find($id, $lockMode = null, $lockVersion = null)
  * @method Post|null findOneBy(array $criteria, array $orderBy = null)
@@ -23,6 +22,14 @@ class PostRepository extends ServiceEntityRepository
     public function findAll()
     {
         return $this->findBy([], ['title' => 'ASC']);
+    }
+
+    public function findMy($userId)
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery("SELECT p FROM App\Entity\Post p WHERE p.admin= " . $userId);
+        $myPosts = $query->getResult();
+        return $myPosts;
     }
 
 
