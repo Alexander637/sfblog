@@ -36,10 +36,13 @@ class PostController extends AbstractController
     public function index( PostRepository $postRepository, AdminRepository $adminRepository): Response
     {
 
+        $admin = $this->getUser();
+
         return new Response($this->twig->render('post/index.html.twig', [
-                        'session' => $_SESSION,
+//                        'session' => $_SESSION,
                         'posts' => $postRepository->findAll(),
-                        'admins' =>$adminRepository->findAll()
+                        'admins' =>$adminRepository->findAll(),
+                        'user' => $admin
                     ]));
     }
 
@@ -50,6 +53,8 @@ class PostController extends AbstractController
         $form = $this->createForm(PostFormType::class, $post);
 
         $form->handleRequest($request);
+        $user = $this->getUser()->getId();
+//        dd($user);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post->setAdmin($admin);
@@ -61,9 +66,8 @@ class PostController extends AbstractController
         }
 
         return new Response($this->twig->render('post/user.html.twig', [
-            'session' => $_SESSION,
             'admin' => $admin,
-            'my_posts' => $myPost->findAll(),
+            'my_posts' => $myPost->findMy($user),
             'post_form' => $form->createView()
         ]));
 
