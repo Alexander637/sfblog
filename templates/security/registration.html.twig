@@ -1,13 +1,17 @@
-{% block title %} Registration {% endblock %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-{% block body %}
+<div class="container">
+        <div class="text-center">
+                {% block title %} Registration {% endblock %}
 
-        <h1>Create your account</h1>
+                {% block body %}
+                        <h1>Create your account</h1>
 
-        {{ form_start(admin_form) }}
-        <input type="hidden" name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
-        >
-        {{ form_end(admin_form) }}
-
-{% endblock %}
+                        {{ form_start(admin_form) }}
+                        <input type="hidden" name="_csrf_token"
+                               value="{{ csrf_token('authenticate') }}"
+                        >
+                        {{ form_end(admin_form) }}
+                {% endblock %}
+        </div>
+</div>
