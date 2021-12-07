@@ -31,6 +31,15 @@
             </div>
     {% endfor %}
 
+            <div class="text-center">
+                {% if previous >= 0 %}
+                                <a href="{{ path('user', { id: admin.id, offset: previous }) }}">Previous</a>
+                            {% endif %}
+                        {% if next < my_posts|length %}
+                                <a href="{{ path('user', { id: admin.id, offset: next }) }}">Next</a>
+                      {% endif %}
+            </div>
+
         </div>
     </div>
 </div>

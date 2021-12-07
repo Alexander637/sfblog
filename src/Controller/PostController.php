@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Post;
-
 use App\Entity\Admin;
 use App\Entity\Comment;
 use App\Form\CommentFormType;
@@ -18,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\PostRepository;
 use Twig\Environment;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 
 class PostController extends AbstractController
@@ -33,28 +33,30 @@ class PostController extends AbstractController
     }
 
     #[Route('/', name: 'homepage')]
-    public function index( PostRepository $postRepository, AdminRepository $adminRepository): Response
+    public function index( Request $request, PostRepository $postRepository, AdminRepository $adminRepository): Response
     {
-
         $admin = $this->getUser();
 
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $postRepository->getAllPostsPaginator($offset);
+
         return new Response($this->twig->render('post/index.html.twig', [
-//                        'session' => $_SESSION,
-                        'posts' => $postRepository->findAll(),
-                        'admins' =>$adminRepository->findAll(),
-                        'user' => $admin
-                    ]));
+            'posts' => $paginator,
+            'admins' =>$adminRepository->findAll(),
+            'last_posts' => $postRepository->findLast(),
+            'previous' => $offset - PostRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + PostRepository::PAGINATOR_PER_PAGE),
+            'user' => $admin
+        ]));
     }
 
     #[Route('/user/{id}', name: 'user')]
-    public function post(Request $request, Admin $admin, PostRepository $myPost): Response
+    public function post(Request $request, Admin $admin, PostRepository $postRepository): Response
     {
         $post = new Post();
         $form = $this->createForm(PostFormType::class, $post);
 
         $form->handleRequest($request);
-        $user = $this->getUser()->getId();
-//        dd($user);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post->setAdmin($admin);
@@ -65,10 +67,16 @@ class PostController extends AbstractController
             return $this->redirectToRoute('user', ['id' => $admin->getId()]);
         }
 
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $postRepository->getPostPaginator($this->getUser()->getId(), $offset);
+
         return new Response($this->twig->render('post/user.html.twig', [
             'admin' => $admin,
-            'my_posts' => $myPost->findMy($user),
-            'post_form' => $form->createView()
+            'last_posts' => $postRepository->findLast(),
+            'post_form' => $form->createView(),
+            'my_posts' => $paginator,
+            'previous' => $offset - PostRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + PostRepository::PAGINATOR_PER_PAGE)
         ]));
 
     }
@@ -148,9 +156,22 @@ class PostController extends AbstractController
             'posts' => $postRepository->findAll(),
             'post' => $post,
             'comments' => $paginator,
+            'last_posts' => $postRepository->findLast(),
             'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
             'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
             'comment_form' => $form->createView()
+        ]));
+    }
+
+    #[Route('/search/posts', name: 'search')]
+    public function searchPost(Request $request, PostRepository $postRepository)
+    {
+        $search = $request->request->get('search');
+        $data = $postRepository->search($search);
+
+        return new Response($this->twig->render('post/search.html.twig', [
+            'search_posts' => $data,
+            'last_posts' => $postRepository->findLast()
         ]));
     }
 

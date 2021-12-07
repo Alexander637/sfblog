@@ -18,14 +18,24 @@
                     </div>
                 {% endif %}
 
+
+    <form class="pull-right hidden" role="search" id="nav-search-form" method="post" action="{{ path('search') }}">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search" name ="search">
+            <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary">Search posts</button>
+          </span>
+        </div>
+    </form>
+
                 <h1><a href="{{ path('homepage') }}">User's book</a></h1>
                 <div class="dropdown">
                     <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                         Post's list
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        {% for post in posts %}
-                        <li><a class="dropdown-item" href="{{ path('post', { slug: post.slug }) }}">{{ post.title }}</a></li>
+                    <ul class="dropdown-menu "  aria-labelledby="dropdownMenuLink">
+                        {% for last_post in last_posts %}
+                        <li><a class="dropdown-item" href="{{ path('post', { slug: last_post.slug }) }}">{{ last_post.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>

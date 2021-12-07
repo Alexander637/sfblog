@@ -17,7 +17,7 @@ use App\Entity\Post;
  */
 class CommentRepository extends ServiceEntityRepository
 {
-    public const PAGINATOR_PER_PAGE = 1;
+    public const PAGINATOR_PER_PAGE = 5;
 
     public function __construct(ManagerRegistry $registry)
     {
