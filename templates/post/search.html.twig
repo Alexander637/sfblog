@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="container">
+
+    {% for post in search_posts %}
+
+        <div class="card text-center">
+            <h5 class="card-header">Author: {{ post.author}} </h5>
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+                <p class="card-text">{{ post.text }}</p>
+                <a href="{{ path('post', {slug: post.slug}) }}" class="btn btn-primary">Go to post</a>
+            </div>
+        </div>
+    {% endfor %}
+
+    </div>
+
+{% endblock %}

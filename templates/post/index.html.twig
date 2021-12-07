@@ -4,38 +4,37 @@
 
 {% block body %}
 
+    <div class="container">
+
+        <h3><a href="{{ path('user', {id: user.id}) }}">My Posts</a></h3>
+
+        <div class="row">
 
 
+            <h2 class="text-center">All Posts</h2>
+                {% for post in posts %}
+            <div class="col">
 
-<div class="container">
-
-
-{#    {% for admin in admins %}#}
-{#        {% if admin.username == session._sf2_attributes['_security.last_username'] %}#}
-{#    {% if admin.id == user.id%}#}
-    <h3><a href="{{ path('user', {id: user.id}) }}">My Posts</a></h3>
-{#        {% endif %}#}
-
-{#    {% endfor %}#}
-
-    <div class="row">
-
-
-        <h2 class="text-center">All Posts</h2>
-            {% for post in posts %}
-        <div class="col">
-
-                <div class="card text-center" style="width: 18rem; margin-bottom: 10px;">
-                    <h5 class="card-header">Author: {{ post.author}} </h5>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <a href="{{ path('post', {slug: post.slug}) }}" class="btn btn-primary">Go to post</a>
+                    <div class="card text-center" style="width: 15rem; margin-bottom: 10px;">
+                        <h5 class="card-header">Author: {{ post.author}} </h5>
+                        <div class="card-body">
+                            <h5 class="card-text">{{ post.title }}</h5>
+                            <div class="card-footer"><a  href="{{ path('post', {slug: post.slug}) }}" class="btn btn-primary">Go to post</a></div>
+                        </div>
                     </div>
-                </div>
-        </div>
+            </div>
+                {% endfor %}
 
-            {% endfor %}
+            <div class="text-center">
+                {% if previous >= 0 %}
+                    <a href="{{ path('homepage', { offset: previous }) }}">Previous</a>
+                {% endif %}
+                {% if next < posts|length %}
+                    <a href="{{ path('homepage', { offset: next }) }}">Next</a>
+                {% endif %}
+            </div>
+
+        </div>
     </div>
-</div>
 
 {% endblock %}
