@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %} Search {% endblock %}
+
 {% block body %}
 
     <div class="container">
@@ -14,8 +16,8 @@
                 <a href="{{ path('post', {slug: post.slug}) }}" class="btn btn-primary">Go to post</a>
             </div>
         </div>
-    {% endfor %}
 
+    {% endfor %}
     </div>
 
 {% endblock %}
