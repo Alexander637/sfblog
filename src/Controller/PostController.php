@@ -36,7 +36,6 @@ class PostController extends AbstractController
     public function index( Request $request, PostRepository $postRepository, AdminRepository $adminRepository): Response
     {
         $admin = $this->getUser();
-
         $offset = max(0, $request->query->getInt('offset', 0));
         $paginator = $postRepository->getAllPostsPaginator($offset);
 
@@ -85,7 +84,6 @@ class PostController extends AbstractController
     public function deletePost($slug)
     {
 
-
         $post =  $this->getDoctrine()->getRepository(Post::class)->findOneBy(['slug'=>$slug]);
         $admin = $this->getUser();
 
@@ -99,7 +97,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/update/{slug}', name: 'update')]
-    public function update(Post $post, Request $request)
+    public function update(Post $post, Request $request, PostRepository $postRepository)
     {
         $admin = $this->getUser();
 
@@ -114,6 +112,8 @@ class PostController extends AbstractController
         }
 
         return $this->render('post/update.html.twig', [
+            'last_posts' => $postRepository->findLast(),
+
             'up_form' => $up_form->createView()
         ]);
     }
@@ -163,7 +163,7 @@ class PostController extends AbstractController
         ]));
     }
 
-    #[Route('/search/posts', name: 'search')]
+    #[Route('/search', name: 'search')]
     public function searchPost(Request $request, PostRepository $postRepository)
     {
         $search = $request->request->get('search');
@@ -174,5 +174,4 @@ class PostController extends AbstractController
             'last_posts' => $postRepository->findLast()
         ]));
     }
-
 }
